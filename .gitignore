@@ -1,12 +1,13 @@
 # Data is delivered separately (see docs/data.md)
-data/
-demo/predictions/
+/data/
+/demo/predictions/
+/DATA_README.txt
 
 # Generated outputs
-runs/
-results/full_sg/cache/
-results/full_sg/final/
-predictions/
+/runs/
+/predictions/
+/results/full_sg/cache/
+/results/full_sg/final/
 
 # Python
 __pycache__/
@@ -15,6 +16,6 @@ __pycache__/
 .venv/
 
 # Demo frontend
-demo/node_modules/
-demo/dist/
-demo/build/
+/demo/node_modules/
+/demo/dist/
+/demo/build/
