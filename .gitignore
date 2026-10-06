@@ -1,0 +1,20 @@
+# Data is delivered separately (see docs/data.md)
+data/
+demo/predictions/
+
+# Generated outputs
+runs/
+results/full_sg/cache/
+results/full_sg/final/
+predictions/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Demo frontend
+demo/node_modules/
+demo/dist/
+demo/build/

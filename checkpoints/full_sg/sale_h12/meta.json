@@ -1,0 +1,74 @@
+{
+  "dataset": "full_sg",
+  "task": "sale",
+  "horizon": 12,
+  "model": "HPGNet (RpHGNN context precompute + causal Transformer)",
+  "relations": [
+    "size-project",
+    "same-MRT",
+    "price-peer"
+  ],
+  "selection": "temporal module and hyperparameters chosen on validation RMSE (last 24 pre-2020 feature months); early stopping on validation; no refit",
+  "seed": 42,
+  "config": {
+    "name": "g5",
+    "lr": 0.0008,
+    "weight_decay": 5e-05,
+    "hidden": 96,
+    "layers": 2,
+    "dropout": 0.05,
+    "merge": "concat",
+    "cosine": false
+  },
+  "target": "logratio",
+  "target_scale": {
+    "mean": 0.04811586067080498,
+    "std": 0.15017853677272797
+  },
+  "model_kwargs": {
+    "num_groups": 3,
+    "group_size": 3,
+    "feat_dim": 33,
+    "hidden_dim": 96,
+    "temporal": "transformer",
+    "num_layers": 2,
+    "heads": 4,
+    "dropout": 0.05,
+    "merge_mode": "concat"
+  },
+  "window": 12,
+  "group_names": [
+    "self",
+    "rev_size_project",
+    "similar_price"
+  ],
+  "epochs_run": 9,
+  "params": 298783,
+  "metrics": {
+    "validation": {
+      "rmse": 97.7560889647673,
+      "mae": 70.62448120117188,
+      "mape": 5.246403217315674,
+      "r2": 0.9575005716937207,
+      "num_samples": 15394
+    },
+    "test": {
+      "rmse": 219.17560382601891,
+      "mae": 170.68026733398438,
+      "mape": 9.960662841796875,
+      "r2": 0.8026094088361058,
+      "num_samples": 53863
+    }
+  },
+  "report_metrics": {
+    "note": "Original seed-42 run reported in the final report. Its weights were not saved; this checkpoint is a retrain with the same configuration and seed (GPU training is not bit-reproducible).",
+    "test_seed42": {
+      "rmse": 219.89772125354096,
+      "mae": 171.35336303710938,
+      "mape": 9.998159408569336,
+      "r2": 0.8013065908671557,
+      "num_samples": 53863
+    },
+    "test_rmse_mean_3_seeds": 269.17502736661845
+  }
+}

@@ -1,0 +1,126 @@
+name: ccr_sale
+
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  job:
+    chdir: false
+
+io_paths:
+  input_path: data/raw/ccr_sale.csv
+  output_folder: data/processed/ccr_sale
+  full_project_location_path: data/raw/project_location.csv
+  mrt_info_path: data/raw/rail_transport.csv
+
+io_node_paths:
+  project_info_filename: project_info
+  timestep_info_filename: timestep_info
+  node_id_filename: node_id
+  project_node_filename: project_level_node
+  size_node_filename: size_level_node
+  data_file_ext: .csv
+  standardisation_file: stand.json
+  normalisation01_file: norm0.json
+  normalisation11_file: norm1.json
+
+overwrite: false
+
+rename:
+  date: yyyymm
+  project_name: condo_name
+  node_id: null
+  project_id: null
+  timestep: null
+  rent_per_sqft: rent_psf_obs
+  rent_per_sqft_imp: rent_psf_imp
+  y_mask: was_observed
+  longitude: null
+  latitude: null
+  condo_age_at_transaction: condo_age_at_transaction
+  Planning Area: Planning Area
+  nearest_school_dist: nearest_school_dist
+
+standard_cols: ["node_id", "project_id", "project_name", "timestep", "date", "size_tier", "rent_per_sqft", "y_mask"]
+
+project_info:
+  cols: ["project_id", "project_name", "latitude", "longitude", "condo_age_at_transaction", "Planning Area", "nearest_school_dist"]
+  other_feat: false
+  to_drop: []
+  first_few: ["project_id", "project_name"]
+  last_few: []
+  sort_by: ["project_id"]
+
+timestep_info:
+  cols: ["timestep", "date"]
+  other_feat: false
+  to_drop: []
+  first_few: ["timestep", "date"]
+  last_few: []
+  sort_by: ["timestep"]
+
+form_project_node:
+  to_drop: ["size_tier", "rent_per_sqft_imp", "y_mask", "date", "project_name", "yyyymm", "condo_name", "rent_psf_obs", "rent_psf_imp", "was_observed", "condo_age_at_transaction"]
+  drop_prefixes: ["Has_"]
+  keep_cols: ["district", "area_sqft_med", "condo_age_at_transaction", "post_covid", "tenure_freehold_like", "tenure_medium_lease_60_80", "tenure_more_than_80", "tenure_short_lease_lt60", "tenure_unknown", "tenure_remaining_years", "project_size_small", "project_size_medium", "project_size_large", "Large_Dev_200plus", "Postal District", "Planning Area", "nearest_mrt_dist", "nearest_bus_stops_dist", "n_bus_stops_within_500m", "nearest_supermarkets_dist", "n_supermarkets_within_500m", "nearest_parks_dist", "n_parks_within_500m", "nearest_clinics_dist", "n_clinics_within_500m", "nearest_bank_dist", "n_bank_within_500m", "nearest_atms_dist", "n_atms_within_500m", "nearest_school_dist", "month_of_year", "consulting_sale_forecast_mid", "consulting_sale_direction", "ura_private_rental_index_yoy_pct", "sora_compounded_3m_pct", "gva_yoy_growth_pct", "cpi_all_items_infl_yoy_pct", "unemployment_rate_sa_pct", "sg_govt_bond_yield_10y_pct", "sgd_per_usd_logret_12m_pct", "ura_private_price_index_avg_3seg_yoy_pct", "hdb_resale_price_index_yoy_pct"]
+  keep_prefixes: ["rental_index_", "ppi_", "log1p_", "vacancy_", "nonlanded_", "assessed_", "uncompleted_", "project_sold_", "district_units_", "retrenchment_", "labour_", "median_income_", "ep_share_", "gt_", "absd_", "resi_", "gls_", "glob_", "dist_", "condo_level_"]
+  group_by: ["project_id", "timestep"]
+
+reindex_node_id:
+  group_by: ["project_id", "size_tier"]
+  sort_by: ["project_id", "size_tier"]
+
+size_node:
+  cols: ["node_id", "project_id", "timestep", "rent_per_sqft", "rent_per_sqft_imp", "y_mask"]
+  other_feat: false
+  categorical: ["size_tier"]
+  as_feat: ["project_id", "timestep", "rent_per_sqft"]
+  to_drop: []
+  no_norm: ["node_id", "project_id", "timestep", "rent_per_sqft", "y_mask"]
+  first_few: ["node_id", "project_id", "timestep"]
+  last_few: ["rent_per_sqft_imp", "rent_per_sqft", "y_mask"]
+  sort_by: ["node_id", "project_id", "timestep"]
+
+project_node:
+  cols: []
+  other_feat: true
+  max_clip_glo: ["_dist", "School", "Institution"]
+  as_feat: ["timestep", "node_id", "rent_per_sqft"]
+  to_drop: ["date", "project_name", "rent_per_sqft_imp"]
+  categorical: ["district", "size_tier", "Planning Area"]
+  first_few: ["timestep", "node_id", "project_id"]
+  last_few: ["rent_per_sqft", "y_mask"]
+  sort_by: ["node_id", "project_id", "timestep"]
+
+edges:
+  data_file_ext: .csv
+  dist:
+    name: "dist"
+    enable: true
+    threshold: 250
+  same_mrt:
+    name: "same_mrt"
+    enable: true
+    threshold: 250
+  same_mrt_dist:
+    name: "same_mrt_dist"
+    epsilon: 5
+    enable: true
+  adjacent_mrt:
+    name: "adjacent_mrt"
+    transport_type: "MRT"
+    enable: true
+  same_school_dist:
+    name: "same_school_dist"
+    epsilon: 0.01
+    enable: true
+  same_age:
+    name: "same_age"
+    age_column: "condo_age_at_transaction"
+    enable: true
+  same_planning_area:
+    name: "same_planning_area"
+    enable: true
+  size_project:
+    name: "size_project"
+    enable: true

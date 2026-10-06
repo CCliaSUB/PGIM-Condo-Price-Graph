@@ -1,0 +1,53 @@
+{
+  "dataset": "ccr",
+  "task": "sale",
+  "horizon": 12,
+  "model": "HPGNet (RpHGNN context precompute + causal Transformer)",
+  "relations": [
+    "size-project",
+    "proximity (250 m)",
+    "school-distance"
+  ],
+  "edge_subset": [
+    "dist",
+    "same_school_dist"
+  ],
+  "selection": "best of 64 relation subsets on validation RMSE (last 24 pre-2020 feature months); early stopping on validation",
+  "seed": 42,
+  "feature_seed": 42,
+  "similar_price_k": 5,
+  "validation_months": 24,
+  "trial": "c14_mean_lowreg",
+  "best_epoch": 16,
+  "group_names": [
+    "self",
+    "rev_size_project"
+  ],
+  "target_scale": {
+    "mean": 1371.2113037109375,
+    "std": 564.9420166015625
+  },
+  "context_shape": [
+    3465,
+    374,
+    2,
+    3,
+    33
+  ],
+  "metrics": {
+    "validation": {
+      "rmse": 133.33659094327783,
+      "mae": 96.61520385742188,
+      "mape": 5.3395653,
+      "r2": 0.9174252887221361,
+      "num_samples": 3132
+    },
+    "test": {
+      "rmse": 158.2055130992596,
+      "mae": 120.47952270507812,
+      "mape": 5.8981757,
+      "r2": 0.8554315877174824,
+      "num_samples": 10086
+    }
+  }
+}

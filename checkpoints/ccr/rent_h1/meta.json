@@ -1,0 +1,51 @@
+{
+  "dataset": "ccr",
+  "task": "rent",
+  "horizon": 1,
+  "model": "HPGNet (RpHGNN context precompute + causal Transformer)",
+  "relations": [
+    "size-project",
+    "same-MRT"
+  ],
+  "edge_subset": [
+    "same_mrt"
+  ],
+  "selection": "best of 64 relation subsets on validation RMSE (last 24 pre-2020 feature months); early stopping on validation",
+  "seed": 42,
+  "feature_seed": 42,
+  "similar_price_k": 5,
+  "validation_months": 24,
+  "trial": "c01_default_b1024",
+  "best_epoch": 19,
+  "group_names": [
+    "self",
+    "rev_size_project"
+  ],
+  "target_scale": {
+    "mean": 3.82035756111145,
+    "std": 1.3591810464859009
+  },
+  "context_shape": [
+    4020,
+    315,
+    2,
+    3,
+    32
+  ],
+  "metrics": {
+    "validation": {
+      "rmse": 0.3399447258203927,
+      "mae": 0.24104970693588257,
+      "mape": 6.2503734,
+      "r2": 0.9022807757763546,
+      "num_samples": 18323
+    },
+    "test": {
+      "rmse": 0.4515727190491549,
+      "mae": 0.3326277732849121,
+      "mape": 7.146544,
+      "r2": 0.8937255800615523,
+      "num_samples": 54067
+    }
+  }
+}
